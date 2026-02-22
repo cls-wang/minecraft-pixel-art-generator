@@ -1,26 +1,64 @@
 import type { Block, PixelBlock, ConversionResult, BlockUsageEntry, RGBColor } from '../types'
 import { BLOCK_MAP } from '../data/blocks'
 
+interface LabColor {
+  L: number
+  a: number
+  b: number
+}
+
 /**
- * Calculates squared Euclidean distance in RGB space.
- * Using squared distance avoids sqrt and is sufficient for comparison.
+ * Converts an RGB color to CIE Lab color space.
+ * Uses D65 illuminant reference white.
  */
-export function rgbDistanceSq(a: RGBColor, b: RGBColor): number {
-  const dr = a.r - b.r
-  const dg = a.g - b.g
-  const db = a.b - b.b
-  return dr * dr + dg * dg + db * db
+function rgbToLab(rgb: RGBColor): LabColor {
+  const toLinear = (c: number): number => {
+    const v = c / 255
+    return v > 0.04045 ? Math.pow((v + 0.055) / 1.055, 2.4) : v / 12.92
+  }
+
+  const r = toLinear(rgb.r)
+  const g = toLinear(rgb.g)
+  const b = toLinear(rgb.b)
+
+  // Linear RGB → XYZ (D65), normalized by reference white
+  const x = (r * 0.4124564 + g * 0.3575761 + b * 0.1804375) / 0.95047
+  const y = (r * 0.2126729 + g * 0.7151522 + b * 0.0721750) / 1.00000
+  const z = (r * 0.0193339 + g * 0.1191920 + b * 0.9503041) / 1.08883
+
+  const f = (t: number): number =>
+    t > 0.008856 ? Math.cbrt(t) : 7.787 * t + 16 / 116
+
+  return {
+    L: 116 * f(y) - 16,
+    a: 500 * (f(x) - f(y)),
+    b: 200 * (f(y) - f(z)),
+  }
+}
+
+/**
+ * Calculates CIE76 Delta E perceptual color distance between two RGB colors.
+ * More accurate than RGB Euclidean distance for human color perception.
+ */
+export function deltaE(a: RGBColor, b: RGBColor): number {
+  const labA = rgbToLab(a)
+  const labB = rgbToLab(b)
+  const dL = labA.L - labB.L
+  const da = labA.a - labB.a
+  const db = labA.b - labB.b
+  return Math.sqrt(dL * dL + da * da + db * db)
 }
 
 /**
  * Finds the closest block from the palette for a given RGB color.
+ * Uses CIE Lab Delta E for perceptually accurate color matching.
  */
 export function findClosestBlock(color: RGBColor, palette: Block[]): Block {
   let closest = palette[0]!
   let minDist = Infinity
 
   for (const block of palette) {
-    const dist = rgbDistanceSq(color, block.color)
+    const dist = deltaE(color, block.color)
     if (dist < minDist) {
       minDist = dist
       closest = block

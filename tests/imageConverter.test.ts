@@ -1,22 +1,29 @@
 import { describe, it, expect } from 'vitest'
-import { rgbDistanceSq, findClosestBlock, denoisePixels } from '../src/composables/useImageConverter'
+import { deltaE, findClosestBlock, denoisePixels } from '../src/composables/useImageConverter'
 import { BLOCKS, BLOCKS_BY_CATEGORY } from '../src/data/blocks'
 import type { Block, RGBColor } from '../src/types'
 
-describe('rgbDistanceSq', () => {
+describe('deltaE', () => {
   it('returns 0 for identical colors', () => {
-    expect(rgbDistanceSq({ r: 100, g: 150, b: 200 }, { r: 100, g: 150, b: 200 })).toBe(0)
+    expect(deltaE({ r: 100, g: 150, b: 200 }, { r: 100, g: 150, b: 200 })).toBe(0)
   })
 
-  it('calculates correct squared distance', () => {
-    // dr=3, dg=4, db=0 → 9+16+0=25
-    expect(rgbDistanceSq({ r: 0, g: 0, b: 0 }, { r: 3, g: 4, b: 0 })).toBe(25)
+  it('returns positive distance for different colors', () => {
+    expect(deltaE({ r: 0, g: 0, b: 0 }, { r: 255, g: 255, b: 255 })).toBeGreaterThan(0)
   })
 
   it('is symmetric', () => {
     const a: RGBColor = { r: 10, g: 20, b: 30 }
     const b: RGBColor = { r: 50, g: 80, b: 120 }
-    expect(rgbDistanceSq(a, b)).toBe(rgbDistanceSq(b, a))
+    expect(deltaE(a, b)).toBeCloseTo(deltaE(b, a), 10)
+  })
+
+  it('orange is closer to orange wool than yellow wool', () => {
+    // Verifies Lab space correctly separates orange from yellow
+    const orangeHair: RGBColor = { r: 210, g: 120, b: 40 }
+    const orangeWool: RGBColor = { r: 240, g: 118, b: 19 }
+    const yellowWool: RGBColor = { r: 248, g: 197, b: 39 }
+    expect(deltaE(orangeHair, orangeWool)).toBeLessThan(deltaE(orangeHair, yellowWool))
   })
 })
 
