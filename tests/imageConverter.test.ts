@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest'
-import { rgbDistanceSq, findClosestBlock } from '../src/composables/useImageConverter'
+import { rgbDistanceSq, findClosestBlock, denoisePixels } from '../src/composables/useImageConverter'
 import { BLOCKS, BLOCKS_BY_CATEGORY } from '../src/data/blocks'
 import type { Block, RGBColor } from '../src/types'
 
@@ -46,6 +46,60 @@ describe('findClosestBlock', () => {
     const single = [palette[0]!]
     const result = findClosestBlock({ r: 128, g: 128, b: 128 }, single)
     expect(result.id).toBe('black')
+  })
+})
+
+describe('denoisePixels', () => {
+  it('removes a lone pixel surrounded by a different color', () => {
+    // 3×1 grid: [A, B, A] — B is isolated
+    const pixels = [
+      { x: 0, y: 0, blockId: 'A' },
+      { x: 1, y: 0, blockId: 'B' },
+      { x: 2, y: 0, blockId: 'A' },
+    ]
+    const result = denoisePixels(pixels, 3, 1)
+    expect(result[1]!.blockId).toBe('A')
+  })
+
+  it('keeps a pixel that shares color with at least one neighbor', () => {
+    // 3×1 grid: [A, A, B] — neither A is isolated
+    const pixels = [
+      { x: 0, y: 0, blockId: 'A' },
+      { x: 1, y: 0, blockId: 'A' },
+      { x: 2, y: 0, blockId: 'B' },
+    ]
+    const result = denoisePixels(pixels, 3, 1)
+    expect(result[0]!.blockId).toBe('A')
+    expect(result[1]!.blockId).toBe('A')
+  })
+
+  it('replaces isolated center pixel with the majority neighbor color', () => {
+    // Plus shape: center=X, all 4 neighbors=A
+    const pixels = [
+      { x: 1, y: 0, blockId: 'A' },
+      { x: 0, y: 1, blockId: 'A' },
+      { x: 1, y: 1, blockId: 'X' }, // isolated
+      { x: 2, y: 1, blockId: 'A' },
+      { x: 1, y: 2, blockId: 'A' },
+    ]
+    const result = denoisePixels(pixels, 3, 3)
+    const center = result.find(p => p.x === 1 && p.y === 1)!
+    expect(center.blockId).toBe('A')
+  })
+
+  it('does not change pixels when the grid has only one block color', () => {
+    const pixels = [
+      { x: 0, y: 0, blockId: 'A' },
+      { x: 1, y: 0, blockId: 'A' },
+      { x: 0, y: 1, blockId: 'A' },
+      { x: 1, y: 1, blockId: 'A' },
+    ]
+    const result = denoisePixels(pixels, 2, 2)
+    expect(result.every(p => p.blockId === 'A')).toBe(true)
+  })
+
+  it('returns empty array unchanged', () => {
+    expect(denoisePixels([], 5, 5)).toEqual([])
   })
 })
 

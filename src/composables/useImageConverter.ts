@@ -43,14 +43,68 @@ function loadImage(dataUrl: string): Promise<HTMLImageElement> {
 }
 
 /**
+ * Removes isolated stray pixels by replacing each pixel that has no same-color
+ * 4-directional neighbor with the most common neighbor's block ID.
+ * A single pass eliminates lone pixels surrounded by a different color.
+ */
+export function denoisePixels(
+  pixels: PixelBlock[],
+  width: number,
+  height: number
+): PixelBlock[] {
+  const grid = new Map<number, string>()
+  for (const p of pixels) {
+    grid.set(p.y * width + p.x, p.blockId)
+  }
+
+  const offsets = [
+    { dx: 0, dy: -1 },
+    { dx: 0, dy: 1 },
+    { dx: -1, dy: 0 },
+    { dx: 1, dy: 0 },
+  ]
+
+  return pixels.map(p => {
+    const neighborIds: string[] = []
+    for (const { dx, dy } of offsets) {
+      const nx = p.x + dx
+      const ny = p.y + dy
+      if (nx < 0 || nx >= width || ny < 0 || ny >= height) continue
+      const nId = grid.get(ny * width + nx)
+      if (nId !== undefined) neighborIds.push(nId)
+    }
+
+    // Keep pixel if it has at least one same-color neighbor, or no neighbors at all
+    if (neighborIds.length === 0 || neighborIds.some(id => id === p.blockId)) return p
+
+    // Pixel is isolated — replace with the most frequent neighbor color
+    const freq = new Map<string, number>()
+    for (const id of neighborIds) {
+      freq.set(id, (freq.get(id) ?? 0) + 1)
+    }
+    let bestId = neighborIds[0]!
+    let bestCount = 0
+    for (const [id, count] of freq) {
+      if (count > bestCount) {
+        bestCount = count
+        bestId = id
+      }
+    }
+    return { ...p, blockId: bestId }
+  })
+}
+
+/**
  * Converts an image to pixel blocks using the given palette and resolution.
  * Transparent pixels (alpha < 128) are skipped.
+ * Set denoise to true (default) to remove isolated stray pixels.
  */
 export async function convertImage(
   dataUrl: string,
   targetWidth: number,
   targetHeight: number,
-  palette: Block[]
+  palette: Block[],
+  denoise = true
 ): Promise<ConversionResult> {
   if (palette.length === 0) {
     throw new Error('請至少選擇一個方塊')
@@ -68,8 +122,7 @@ export async function convertImage(
   const imageData = ctx.getImageData(0, 0, targetWidth, targetHeight)
   const data = imageData.data
 
-  const pixels: PixelBlock[] = []
-  const usageMap = new Map<string, number>()
+  const rawPixels: PixelBlock[] = []
 
   for (let y = 0; y < targetHeight; y++) {
     for (let x = 0; x < targetWidth; x++) {
@@ -83,9 +136,15 @@ export async function convertImage(
       if (a < 128) continue
 
       const block = findClosestBlock({ r, g, b }, palette)
-      pixels.push({ x, y, blockId: block.id })
-      usageMap.set(block.id, (usageMap.get(block.id) ?? 0) + 1)
+      rawPixels.push({ x, y, blockId: block.id })
     }
+  }
+
+  const pixels = denoise ? denoisePixels(rawPixels, targetWidth, targetHeight) : rawPixels
+
+  const usageMap = new Map<string, number>()
+  for (const p of pixels) {
+    usageMap.set(p.blockId, (usageMap.get(p.blockId) ?? 0) + 1)
   }
 
   const blockUsage: BlockUsageEntry[] = Array.from(usageMap.entries())
