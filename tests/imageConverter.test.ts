@@ -1,22 +1,29 @@
 import { describe, it, expect } from 'vitest'
-import { rgbDistanceSq, findClosestBlock } from '../src/composables/useImageConverter'
+import { deltaE, findClosestBlock, denoisePixels } from '../src/composables/useImageConverter'
 import { BLOCKS, BLOCKS_BY_CATEGORY } from '../src/data/blocks'
 import type { Block, RGBColor } from '../src/types'
 
-describe('rgbDistanceSq', () => {
+describe('deltaE', () => {
   it('returns 0 for identical colors', () => {
-    expect(rgbDistanceSq({ r: 100, g: 150, b: 200 }, { r: 100, g: 150, b: 200 })).toBe(0)
+    expect(deltaE({ r: 100, g: 150, b: 200 }, { r: 100, g: 150, b: 200 })).toBe(0)
   })
 
-  it('calculates correct squared distance', () => {
-    // dr=3, dg=4, db=0 → 9+16+0=25
-    expect(rgbDistanceSq({ r: 0, g: 0, b: 0 }, { r: 3, g: 4, b: 0 })).toBe(25)
+  it('returns positive distance for different colors', () => {
+    expect(deltaE({ r: 0, g: 0, b: 0 }, { r: 255, g: 255, b: 255 })).toBeGreaterThan(0)
   })
 
   it('is symmetric', () => {
     const a: RGBColor = { r: 10, g: 20, b: 30 }
     const b: RGBColor = { r: 50, g: 80, b: 120 }
-    expect(rgbDistanceSq(a, b)).toBe(rgbDistanceSq(b, a))
+    expect(deltaE(a, b)).toBeCloseTo(deltaE(b, a), 10)
+  })
+
+  it('orange is closer to orange wool than yellow wool', () => {
+    // Verifies Lab space correctly separates orange from yellow
+    const orangeHair: RGBColor = { r: 210, g: 120, b: 40 }
+    const orangeWool: RGBColor = { r: 240, g: 118, b: 19 }
+    const yellowWool: RGBColor = { r: 248, g: 197, b: 39 }
+    expect(deltaE(orangeHair, orangeWool)).toBeLessThan(deltaE(orangeHair, yellowWool))
   })
 })
 
@@ -46,6 +53,60 @@ describe('findClosestBlock', () => {
     const single = [palette[0]!]
     const result = findClosestBlock({ r: 128, g: 128, b: 128 }, single)
     expect(result.id).toBe('black')
+  })
+})
+
+describe('denoisePixels', () => {
+  it('removes a lone pixel surrounded by a different color', () => {
+    // 3×1 grid: [A, B, A] — B is isolated
+    const pixels = [
+      { x: 0, y: 0, blockId: 'A' },
+      { x: 1, y: 0, blockId: 'B' },
+      { x: 2, y: 0, blockId: 'A' },
+    ]
+    const result = denoisePixels(pixels, 3, 1)
+    expect(result[1]!.blockId).toBe('A')
+  })
+
+  it('keeps a pixel that shares color with at least one neighbor', () => {
+    // 3×1 grid: [A, A, B] — neither A is isolated
+    const pixels = [
+      { x: 0, y: 0, blockId: 'A' },
+      { x: 1, y: 0, blockId: 'A' },
+      { x: 2, y: 0, blockId: 'B' },
+    ]
+    const result = denoisePixels(pixels, 3, 1)
+    expect(result[0]!.blockId).toBe('A')
+    expect(result[1]!.blockId).toBe('A')
+  })
+
+  it('replaces isolated center pixel with the majority neighbor color', () => {
+    // Plus shape: center=X, all 4 neighbors=A
+    const pixels = [
+      { x: 1, y: 0, blockId: 'A' },
+      { x: 0, y: 1, blockId: 'A' },
+      { x: 1, y: 1, blockId: 'X' }, // isolated
+      { x: 2, y: 1, blockId: 'A' },
+      { x: 1, y: 2, blockId: 'A' },
+    ]
+    const result = denoisePixels(pixels, 3, 3)
+    const center = result.find(p => p.x === 1 && p.y === 1)!
+    expect(center.blockId).toBe('A')
+  })
+
+  it('does not change pixels when the grid has only one block color', () => {
+    const pixels = [
+      { x: 0, y: 0, blockId: 'A' },
+      { x: 1, y: 0, blockId: 'A' },
+      { x: 0, y: 1, blockId: 'A' },
+      { x: 1, y: 1, blockId: 'A' },
+    ]
+    const result = denoisePixels(pixels, 2, 2)
+    expect(result.every(p => p.blockId === 'A')).toBe(true)
+  })
+
+  it('returns empty array unchanged', () => {
+    expect(denoisePixels([], 5, 5)).toEqual([])
   })
 })
 
