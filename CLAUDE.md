@@ -110,6 +110,22 @@
 3. For code changes: ALWAYS use feature branch
 ```
 
+## Agents
+
+Available agents are located in `.claude/agents/`:
+
+- **spec-discussion** - Discusses and reviews specs through conversation only (read-only)
+  - Use to brainstorm requirements, surface gaps, and refine ideas
+  - Does NOT write or modify any files
+  - Produces a discussion summary for spec-designer to act on
+  - Best used BEFORE spec-designer to clarify what needs to be written
+
+- **spec-designer** - Designs and maintains feature specifications
+  - Use BEFORE implementing new features
+  - Creates/updates specs in `docs/specs/`
+  - Ensures consistency with existing spec structure
+  - Provides implementation guidance to main agent
+
 ## Custom Skills
 
 Available skills are located in `.claude/skills/`:
