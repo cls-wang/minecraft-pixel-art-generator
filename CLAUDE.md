@@ -33,43 +33,20 @@
 
 ## Git Conventions
 
-### Branch Naming
-- **Rule**: All code changes (except `CLAUDE.md` or `README.md`) MUST be on feature branches
-- **Format**: `<type>/<short-description>`
-- **Types**:
-  - `feat/` - New features
-  - `fix/` - Bug fixes
-  - `refactor/` - Code refactoring
-  - `style/` - UI/styling changes
-  - `test/` - Test additions or updates
-  - `docs/` - Documentation updates
-- **Examples**:
-  - `feat/add-block-palette`
-  - `fix/image-processing-error`
-  - `refactor/optimize-color-matching`
-  - `style/update-pixel-grid`
+> Commit format and PR rules follow the shared `github-workflow` agent.
+> This project overrides **branch naming** only:
 
-### Commit Format
-- **Style**: Conventional Commits
-- **Format**: `<type>: <description>`
-- **Description**: Clear, concise, in Chinese or English
-- **Examples**:
-  - `feat: 新增方塊調色盤選擇功能`
-  - `fix: 修正顏色比對演算法`
-  - `refactor: 重構像素網格元件`
-  - `style: 更新 UI 排版與間距`
-  - `test: 新增顏色量化測試`
-  - `docs: 更新方塊資料結構說明`
+### Branch Naming（專案特有，覆蓋共用規範）
+- **Rule**: All code changes (except `CLAUDE.md` or `README.md`) MUST be on feature branches
+- **Format**: `<type>/<short-description>`（無需姓名縮寫前綴）
+- **Types**: `feat/` `fix/` `refactor/` `style/` `test/` `docs/`
+- **Examples**: `feat/add-block-palette`, `fix/image-processing-error`
 
 ### Automated Workflow
 
-1. **Branch Creation**: Automatically create feature branch based on task
-2. **Development**: Write code following project conventions
-3. **Testing**: Run `npm run test:run` to verify all tests pass
-4. **Building**: Run `npm run build` to ensure production build succeeds
-5. **Auto Commit**: Automatically commit with conventional commit message
-6. **Auto Push**: Push to GitHub after user confirmation
-7. **Merge & Deploy**: Prompt user to merge to `main` and deploy
+1. Create feature branch → Develop → Run `npm run test:run` → Run `npm run build`
+2. Auto-commit with conventional message → Push after user confirmation
+3. Merge to `main` → Deploy with `/deploy`
 
 ## Critical Rules
 
@@ -128,16 +105,6 @@
 3. For code changes: ALWAYS use feature branch
 ```
 
-## Agents
-
-Available agents are located in `.claude/agents/`:
-
-- **spec-designer** - Designs and maintains feature specifications
-  - Use BEFORE implementing new features
-  - Creates/updates specs in `docs/specs/`
-  - Ensures consistency with existing spec structure
-  - Provides implementation guidance to main agent
-
 ## Custom Skills
 
 Available skills are located in `.claude/skills/`:
@@ -185,3 +152,32 @@ npm run test:run         # Run tests once (for CI/CD)
 For detailed feature specifications, see `docs/specs/`:
 
 Always refer to specs when implementing features to ensure consistency.
+
+---
+<!-- SHARED CONFIGURATION — 請勿修改此區塊以下的內容 -->
+<!-- 此區塊由 claude-shared-config submodule 管理。執行 scripts/claude-setup.ps1 更新。 -->
+
+## Shared Configuration
+
+此專案使用 [claude-shared-config](./claude-shared-config/README.md) 共用 Claude agents。
+
+**Submodule**：`claude-shared-config/`
+**同步設定**：`.claude-sync.json`
+**共用 Agents**（位於 `.claude/agents/`）：
+- `code-reviewer` — 依技術棧（Vue 3 / TypeScript）審查程式碼品質
+- `github-workflow` — Conventional Commits、PR 格式（branch 命名見上方專案特有規則）
+- `spec-designer` — 功能規格設計（規格位於 `docs/specs/`）
+
+**同步指令**：
+```powershell
+.\scripts\claude-setup.ps1           # 同步 agents
+.\scripts\claude-setup.ps1 --check  # 僅檢查（CI 用）
+.\scripts\claude-setup.ps1 --update # 拉最新版並同步
+```
+
+**技術棧宣告**：`Vue 3 / TypeScript`
+> code-reviewer 依此套用 TypeScript 型別規則與 Vue 3 Composition API 相關模式。
+
+**修改共用 agent**：請在 claude-shared-config repo 開 PR，不要直接修改 `.claude/agents/` 中的同步檔案。
+
+<!-- END SHARED CONFIGURATION -->
