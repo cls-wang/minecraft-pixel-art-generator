@@ -31,22 +31,27 @@
 - Prefer composition over inheritance
 - No TypeScript `any` - use proper types or `unknown`
 
+## Project Scopes
+
+<!-- github-workflow agent 驗證 branch/commit scope 時會讀取此段落 -->
+
+| Scope | 說明 |
+|-------|------|
+| `canvas` | 像素畫布渲染與互動 |
+| `blocks` | 方塊調色盤與選取 |
+| `color` | 顏色比對與量化演算法 |
+| `export` | 圖片匯出功能 |
+| `ui` | UI 元件與版面配置 |
+
 ## Git Conventions
 
-> Commit format and PR rules follow the shared `github-workflow` agent.
-> This project overrides **branch naming** only:
-
-### Branch Naming（專案特有，覆蓋共用規範）
-- **Rule**: All code changes (except `CLAUDE.md` or `README.md`) MUST be on feature branches
-- **Format**: `<type>/<short-description>`（無需姓名縮寫前綴）
-- **Types**: `feat/` `fix/` `refactor/` `style/` `test/` `docs/`
-- **Examples**: `feat/add-block-palette`, `fix/image-processing-error`
+> Branch 命名與 commit 格式遵循共用的 `github-workflow` agent 規範。
+> Scope 驗證範圍：共用 scopes（ci/deps/config/build/release）+ 上方 Project Scopes。
 
 ### Automated Workflow
 
-1. Create feature branch → Develop → Run `npm run test:run` → Run `npm run build`
-2. Auto-commit with conventional message → Push after user confirmation
-3. Merge to `main` → Deploy with `/deploy`
+1. Create feature branch → Develop → `npm run test:run` → `npm run build`
+2. Auto-commit → Push after user confirmation → Merge to `main` → `/deploy`
 
 ## Critical Rules
 
