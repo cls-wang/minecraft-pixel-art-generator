@@ -8,7 +8,8 @@
     "build": "vue-tsc -b && vite build",
     "preview": "vite preview",
     "test": "vitest",
-    "test:run": "vitest run"
+    "test:run": "vitest run",
+    "postinstall": "powershell -ExecutionPolicy Bypass -File scripts/claude-setup.ps1 --check || echo [claude-sync] Agents out of sync -- run: .\\scripts\\claude-setup.ps1"
   },
   "dependencies": {
     "three": "^0.183.1",

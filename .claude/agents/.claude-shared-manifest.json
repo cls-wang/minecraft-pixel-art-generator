@@ -1,0 +1,44 @@
+﻿{
+    "syncedAt":  "2026-02-25T02:20:54.5397599+08:00",
+    "agents":  {
+                   "github-workflow.md":  {
+                                              "syncedAt":  "2026-02-25T01:39:53.6950576+08:00",
+                                              "hash":  "FA5ED26005E9F70477314EF4BFAE0F37ABCE734E2E7D3AE976A8CA7F28298D4B",
+                                              "sourceSize":  2160
+                                          },
+                   "implementer.md":  {
+                                          "syncedAt":  "2026-02-24T20:18:05.5162626+08:00",
+                                          "hash":  "2B97275C1E4D994F20502B340DCD0845F5B5EC16F7C9419114F1203342089BA2",
+                                          "sourceSize":  1871
+                                      },
+                   "code-reviewer.md":  {
+                                            "syncedAt":  "2026-02-24T16:49:23.0866251+08:00",
+                                            "hash":  "F0DDB0D1B01E8FFAA5FA476B810514E4976E22854D0FAFF7F8CF0F24D93EE45C",
+                                            "sourceSize":  1795
+                                        },
+                   "spec-designer.md":  {
+                                            "syncedAt":  "2026-02-24T20:18:05.5222426+08:00",
+                                            "hash":  "823FCF8D5E91B42057D8261E51A173E48DFAE21F64963F8FEC43776485446EC5",
+                                            "sourceSize":  1637
+                                        }
+               },
+    "submoduleCommit":  "12b0eb1fe8416677bd04498f44b9669ab1bb0309",
+    "version":  1,
+    "skills":  {
+                   "commit-history-analyzer":  {
+                                                   "syncedAt":  "2026-02-25T01:42:35.4699498+08:00",
+                                                   "hash":  "F5B0BF46266D2B2019BC0A6F934F4C9E87E4223553F2FB6F48CAE951203445BA",
+                                                   "sourceSize":  677
+                                               },
+                   "manual-change":  {
+                                         "syncedAt":  "2026-02-25T01:42:35.4659631+08:00",
+                                         "hash":  "4C3B8A95BFE067F8EF8E4C73DBA0BA0E76116468E0C554FB896E50C8FE4AA012",
+                                         "sourceSize":  1277
+                                     },
+                   "pr-summary":  {
+                                      "syncedAt":  "2026-02-25T01:42:35.4819079+08:00",
+                                      "hash":  "AD51AFED76B3F0E3AFD5942C38468D1499A1C98A913DBB6513EF79AB13EAFEE4",
+                                      "sourceSize":  677
+                                  }
+               }
+}

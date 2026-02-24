@@ -31,45 +31,27 @@
 - Prefer composition over inheritance
 - No TypeScript `any` - use proper types or `unknown`
 
+## Project Scopes
+
+<!-- github-workflow agent 驗證 branch/commit scope 時會讀取此段落 -->
+
+| Scope | 說明 |
+|-------|------|
+| `canvas` | 像素畫布渲染與互動 |
+| `blocks` | 方塊調色盤與選取 |
+| `color` | 顏色比對與量化演算法 |
+| `export` | 圖片匯出功能 |
+| `ui` | UI 元件與版面配置 |
+
 ## Git Conventions
 
-### Branch Naming
-- **Rule**: All code changes (except `CLAUDE.md` or `README.md`) MUST be on feature branches
-- **Format**: `<type>/<short-description>`
-- **Types**:
-  - `feat/` - New features
-  - `fix/` - Bug fixes
-  - `refactor/` - Code refactoring
-  - `style/` - UI/styling changes
-  - `test/` - Test additions or updates
-  - `docs/` - Documentation updates
-- **Examples**:
-  - `feat/add-block-palette`
-  - `fix/image-processing-error`
-  - `refactor/optimize-color-matching`
-  - `style/update-pixel-grid`
-
-### Commit Format
-- **Style**: Conventional Commits
-- **Format**: `<type>: <description>`
-- **Description**: Clear, concise, in Chinese or English
-- **Examples**:
-  - `feat: 新增方塊調色盤選擇功能`
-  - `fix: 修正顏色比對演算法`
-  - `refactor: 重構像素網格元件`
-  - `style: 更新 UI 排版與間距`
-  - `test: 新增顏色量化測試`
-  - `docs: 更新方塊資料結構說明`
+> Branch 命名與 commit 格式遵循共用的 `github-workflow` agent 規範。
+> Scope 驗證範圍：共用 scopes（ci/deps/config/build/release）+ 上方 Project Scopes。
 
 ### Automated Workflow
 
-1. **Branch Creation**: Automatically create feature branch based on task
-2. **Development**: Write code following project conventions
-3. **Testing**: Run `npm run test:run` to verify all tests pass
-4. **Building**: Run `npm run build` to ensure production build succeeds
-5. **Auto Commit**: Automatically commit with conventional commit message
-6. **Auto Push**: Push to GitHub after user confirmation
-7. **Merge & Deploy**: Prompt user to merge to `main` and deploy
+1. Create feature branch → Develop → `npm run test:run` → `npm run build`
+2. Auto-commit → Push after user confirmation → Merge to `main` → `/deploy`
 
 ## Critical Rules
 
@@ -191,3 +173,32 @@ npm run test:run         # Run tests once (for CI/CD)
 For detailed feature specifications, see `docs/specs/`:
 
 Always refer to specs when implementing features to ensure consistency.
+
+---
+<!-- SHARED CONFIGURATION — 請勿修改此區塊以下的內容 -->
+<!-- 此區塊由 claude-shared-config submodule 管理。執行 scripts/claude-setup.ps1 更新。 -->
+
+## Shared Configuration
+
+此專案使用 [claude-shared-config](./claude-shared-config/README.md) 共用 Claude agents。
+
+**Submodule**：`claude-shared-config/`
+**同步設定**：`.claude-sync.json`
+**共用 Agents**（位於 `.claude/agents/`）：
+- `code-reviewer` — 依技術棧（Vue 3 / TypeScript）審查程式碼品質
+- `github-workflow` — Conventional Commits、PR 格式（branch 命名見上方專案特有規則）
+- `spec-designer` — 功能規格設計（規格位於 `docs/specs/`）
+
+**同步指令**：
+```powershell
+.\scripts\claude-setup.ps1           # 同步 agents
+.\scripts\claude-setup.ps1 --check  # 僅檢查（CI 用）
+.\scripts\claude-setup.ps1 --update # 拉最新版並同步
+```
+
+**技術棧宣告**：`Vue 3 / TypeScript`
+> code-reviewer 依此套用 TypeScript 型別規則與 Vue 3 Composition API 相關模式。
+
+**修改共用 agent**：請在 claude-shared-config repo 開 PR，不要直接修改 `.claude/agents/` 中的同步檔案。
+
+<!-- END SHARED CONFIGURATION -->
