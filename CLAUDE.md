@@ -175,30 +175,31 @@ For detailed feature specifications, see `docs/specs/`:
 Always refer to specs when implementing features to ensure consistency.
 
 ---
-<!-- SHARED CONFIGURATION — 請勿修改此區塊以下的內容 -->
-<!-- 此區塊由 claude-shared-config submodule 管理。執行 scripts/claude-setup.ps1 更新。 -->
+<!-- SHARED CONFIGURATION: managed by claude-shared-config -->
 
-## Shared Configuration
+This repository uses the `claude-shared-config` npm package for shared Claude Code setup.
 
-此專案使用 [claude-shared-config](./claude-shared-config/README.md) 共用 Claude agents。
+- Package: `claude-shared-config`
+- Config file: `.claude-sync.json`
+- Synced agents: `.claude/agents/`
+- Synced skills: `.claude/skills/`
+- Synced hooks: `.claude/settings.json`
 
-**Submodule**：`claude-shared-config/`
-**同步設定**：`.claude-sync.json`
-**共用 Agents**（位於 `.claude/agents/`）：
-- `code-reviewer` — 依技術棧（Vue 3 / TypeScript）審查程式碼品質
-- `github-workflow` — Conventional Commits、PR 格式（branch 命名見上方專案特有規則）
-- `spec-designer` — 功能規格設計（規格位於 `docs/specs/`）
+Update workflow:
 
-**同步指令**：
-```powershell
-.\scripts\claude-setup.ps1           # 同步 agents
-.\scripts\claude-setup.ps1 --check  # 僅檢查（CI 用）
-.\scripts\claude-setup.ps1 --update # 拉最新版並同步
+```bash
+npm update @cls-wang/claude-shared-config
+npx claude-shared-config sync
 ```
 
-**技術棧宣告**：`Vue 3 / TypeScript`
-> code-reviewer 依此套用 TypeScript 型別規則與 Vue 3 Composition API 相關模式。
+Check-only workflow:
 
-**修改共用 agent**：請在 claude-shared-config repo 開 PR，不要直接修改 `.claude/agents/` 中的同步檔案。
+```bash
+npx claude-shared-config check
+```
+
+Shared templates live under `node_modules/@cls-wang/claude-shared-config/templates/` after install.
+
+If you need a project-only agent, create `.claude/agents/proj-[name].md` to avoid collisions with synced shared agents.
 
 <!-- END SHARED CONFIGURATION -->

@@ -1,44 +1,74 @@
-﻿{
-    "syncedAt":  "2026-02-25T02:20:54.5397599+08:00",
-    "agents":  {
-                   "github-workflow.md":  {
-                                              "syncedAt":  "2026-02-25T01:39:53.6950576+08:00",
-                                              "hash":  "FA5ED26005E9F70477314EF4BFAE0F37ABCE734E2E7D3AE976A8CA7F28298D4B",
-                                              "sourceSize":  2160
-                                          },
-                   "implementer.md":  {
-                                          "syncedAt":  "2026-02-24T20:18:05.5162626+08:00",
-                                          "hash":  "2B97275C1E4D994F20502B340DCD0845F5B5EC16F7C9419114F1203342089BA2",
-                                          "sourceSize":  1871
-                                      },
-                   "code-reviewer.md":  {
-                                            "syncedAt":  "2026-02-24T16:49:23.0866251+08:00",
-                                            "hash":  "F0DDB0D1B01E8FFAA5FA476B810514E4976E22854D0FAFF7F8CF0F24D93EE45C",
-                                            "sourceSize":  1795
-                                        },
-                   "spec-designer.md":  {
-                                            "syncedAt":  "2026-02-24T20:18:05.5222426+08:00",
-                                            "hash":  "823FCF8D5E91B42057D8261E51A173E48DFAE21F64963F8FEC43776485446EC5",
-                                            "sourceSize":  1637
-                                        }
-               },
-    "submoduleCommit":  "12b0eb1fe8416677bd04498f44b9669ab1bb0309",
-    "version":  1,
-    "skills":  {
-                   "commit-history-analyzer":  {
-                                                   "syncedAt":  "2026-02-25T01:42:35.4699498+08:00",
-                                                   "hash":  "F5B0BF46266D2B2019BC0A6F934F4C9E87E4223553F2FB6F48CAE951203445BA",
-                                                   "sourceSize":  677
-                                               },
-                   "manual-change":  {
-                                         "syncedAt":  "2026-02-25T01:42:35.4659631+08:00",
-                                         "hash":  "4C3B8A95BFE067F8EF8E4C73DBA0BA0E76116468E0C554FB896E50C8FE4AA012",
-                                         "sourceSize":  1277
-                                     },
-                   "pr-summary":  {
-                                      "syncedAt":  "2026-02-25T01:42:35.4819079+08:00",
-                                      "hash":  "AD51AFED76B3F0E3AFD5942C38468D1499A1C98A913DBB6513EF79AB13EAFEE4",
-                                      "sourceSize":  677
-                                  }
-               }
+{
+  "version": 2,
+  "packageName": "@cls-wang/claude-shared-config",
+  "packageVersion": "0.1.2",
+  "syncedAt": "2026-04-10T12:39:52.969Z",
+  "agents": {
+    "code-reviewer.md": {
+      "hash": "ae263c97fefcc00bfc3544499d3ec1e30405d9899d93436427a04ea27447469a",
+      "syncedAt": "2026-04-10T12:03:14.210Z",
+      "sourceSize": 3017
+    },
+    "github-workflow.md": {
+      "hash": "cbb86e398943a68ebc6a5b3c6194993553bfd5b6cf109fa5d09cafea1d66f3e2",
+      "syncedAt": "2026-04-10T12:03:14.220Z",
+      "sourceSize": 2469
+    },
+    "implementer.md": {
+      "hash": "01f5b0980e55f9102c2dc6b2677da50d1255a6a2e5970663e9890e8a0e01a4dc",
+      "syncedAt": "2026-04-10T12:39:52.960Z",
+      "sourceSize": 2438
+    },
+    "spec-designer.md": {
+      "hash": "15bf2451043d940d7f4dcf51a82382c5b4f11e4763f6eef80c03684bedc79d1c",
+      "syncedAt": "2026-04-10T12:03:14.239Z",
+      "sourceSize": 2513
+    }
+  },
+  "skills": {
+    "abi-compatibility-check": {
+      "hash": "fadc25c5644df4bdf00124a80d7e7dbd5b9547347c1ffe6d4d377b857c3c483f",
+      "syncedAt": "2026-04-10T12:03:14.256Z",
+      "sourceSize": 4584
+    },
+    "api-contract-validation": {
+      "hash": "a53fa4ee3c9f8cf358e504e18684d12da8f2a71c80cd046b771dc077e1637059",
+      "syncedAt": "2026-04-10T12:03:14.275Z",
+      "sourceSize": 5206
+    },
+    "commit-history-analyzer": {
+      "hash": "4167032dd4a77564223280a9403e91f2c6ca76d665abbe928814baae83fb9086",
+      "syncedAt": "2026-04-10T12:03:14.284Z",
+      "sourceSize": 638
+    },
+    "electron-builder-win-fix": {
+      "hash": "cfa4942b4cabe0fe58a58530aa0a158248dbfc6334b576edec1924608dbb9459",
+      "syncedAt": "2026-04-10T12:03:14.297Z",
+      "sourceSize": 4045
+    },
+    "manual-change": {
+      "hash": "8c4a8f35ff0bff7ec28963327a94f330180bdad8235bb4d70dc209cb80700a9c",
+      "syncedAt": "2026-04-10T12:03:14.307Z",
+      "sourceSize": 1241
+    },
+    "pr-summary": {
+      "hash": "7c8a3983d417a1aaeba892492bed786d110d8d4fae4f08bb9936a6bc51c81c2e",
+      "syncedAt": "2026-04-10T12:03:14.315Z",
+      "sourceSize": 633
+    },
+    "ship-branch": {
+      "hash": "55f6d06e47b92af7c83e6f5819817608875f0f58d3b2edc9ed35325d42b138fa",
+      "syncedAt": "2026-04-10T12:03:14.328Z",
+      "sourceSize": 2206
+    },
+    "sync-shared-config": {
+      "hash": "3c526fded93b298cbe4a7c6e7602b8908aa67dfecb06148a2d017b202449544a",
+      "syncedAt": "2026-04-10T12:03:14.331Z",
+      "sourceSize": 1334
+    }
+  },
+  "claudeMd": {
+    "sectionHash": "5af1df3876988ff1b96ec94513843f96e57d8c7904db2cb3f6debe976f59aa00",
+    "syncedAt": "2026-04-10T12:03:14.378Z"
+  }
 }

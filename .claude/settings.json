@@ -6,7 +6,40 @@
         "hooks": [
           {
             "type": "command",
-            "command": "node claude-shared-config/scripts/hooks/guardrail.js"
+            "command": "node @cls-wang/claude-shared-config/scripts/hooks/guardrail.js"
+          },
+          {
+            "type": "command",
+            "command": "node @cls-wang/claude-shared-config/scripts/hooks/require-code-review.js"
+          }
+        ]
+      },
+      {
+        "matcher": "Write",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node @cls-wang/claude-shared-config/scripts/hooks/require-branch.js"
+          }
+        ]
+      },
+      {
+        "matcher": "Edit",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node @cls-wang/claude-shared-config/scripts/hooks/require-branch.js"
+          }
+        ]
+      }
+    ],
+    "PostToolUse": [
+      {
+        "matcher": "Bash",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node @cls-wang/claude-shared-config/scripts/hooks/clear-review-flag.js"
           }
         ]
       }
