@@ -6,11 +6,11 @@
         "hooks": [
           {
             "type": "command",
-            "command": "node @cls-wang/claude-shared-config/scripts/hooks/guardrail.js"
+            "command": "node .claude/hooks/guardrail.js"
           },
           {
             "type": "command",
-            "command": "node @cls-wang/claude-shared-config/scripts/hooks/require-code-review.js"
+            "command": "node .claude/hooks/require-code-review.js"
           }
         ]
       },
@@ -19,7 +19,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "node @cls-wang/claude-shared-config/scripts/hooks/require-branch.js"
+            "command": "node .claude/hooks/require-branch.js"
           }
         ]
       },
@@ -28,7 +28,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "node @cls-wang/claude-shared-config/scripts/hooks/require-branch.js"
+            "command": "node .claude/hooks/require-branch.js"
           }
         ]
       }
@@ -39,7 +39,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "node @cls-wang/claude-shared-config/scripts/hooks/clear-review-flag.js"
+            "command": "node .claude/hooks/clear-review-flag.js"
           }
         ]
       }
