@@ -21,6 +21,7 @@ const selectedBlockIds = ref<Set<string>>(new Set(
 const conversionResult = ref<ConversionResult | null>(null)
 const isConverting = ref(false)
 const errorMsg = ref('')
+const denoise = ref(true)
 
 // View mode
 const viewMode = ref<'2d' | '3d'>('2d')
@@ -90,7 +91,8 @@ async function convert() {
       imageDataUrl.value,
       resolution.value.width,
       resolution.value.height,
-      palette
+      palette,
+      denoise.value
     )
     conversionResult.value = result
   } catch (e) {
@@ -183,6 +185,19 @@ async function convert() {
             <BlockPalette @change="onPaletteChange" />
           </div>
         </section>
+
+        <!-- Denoise option -->
+        <label class="flex items-center gap-3 px-4 py-3 bg-slate-800 rounded-xl cursor-pointer select-none">
+          <input
+            type="checkbox"
+            v-model="denoise"
+            class="w-4 h-4 accent-green-500 cursor-pointer"
+          />
+          <div>
+            <p class="text-slate-200 text-sm font-medium">減少雜點</p>
+            <p class="text-slate-500 text-xs">移除周圍顏色不同的孤立方塊</p>
+          </div>
+        </label>
 
         <!-- Convert button -->
         <button
